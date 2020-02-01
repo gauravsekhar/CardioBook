@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">gsekhar-CardioBook</string>
+    <string name="empty_list">Press + to add new measurement</string>
+</resources>
