@@ -1,9 +1,10 @@
 package com.example.gsekhar_cardiobook;
 
+import android.icu.util.Measure;
+
 import java.util.UUID;
 
 // This class contains field variables which are recorded for each measurement.
-// It consists of a field variable 'uniqueID' which uniquely identifies the measurement records.
 public class Measurement {
 
     private String dateMeasured;
@@ -12,7 +13,8 @@ public class Measurement {
     private Integer diastolicPressure;
     private Integer heartRate;
     private String comment;
-    private UUID uniqueID;      // unique measurement ID
+
+    public Measurement() { }
 
     public Measurement(String dateMeasured, String timeMeasured, Integer systolicPressure, Integer diastolicPressure, Integer heartRate, String comment) {
         this.dateMeasured = dateMeasured;
@@ -21,7 +23,6 @@ public class Measurement {
         this.diastolicPressure = diastolicPressure;
         this.heartRate = heartRate;
         this.comment = comment;
-        this.uniqueID = UUID.randomUUID();  // generate random unique ID to identify record
     }
 
     public String getDateMeasured() { return dateMeasured; }
@@ -35,8 +36,6 @@ public class Measurement {
     public Integer getHeartRate() { return heartRate; }
 
     public String getComment() { return comment; }
-
-    public UUID getUniqueID() {return uniqueID; }
 
     public void setDateMeasured(String dateMeasured) { this.dateMeasured = dateMeasured; }
 

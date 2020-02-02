@@ -1,7 +1,10 @@
 package com.example.gsekhar_cardiobook;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -18,28 +21,34 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        addButton();
-        emptyText();
+
+        StorageManager storageManager = new StorageManager(this);
+        measurements = storageManager.getMeasurements();
+
+        // call emptyMessage() to prompt user to click '+' button if no measurements are found
+        emptyMessage();
+        // initialize the measurements list
+        initRecyclerView();
     }
 
-    // This function displays/hides the message displayed when ArrayList measurements is empty
-    private void emptyText() {
-        TextView emptyText = findViewById(R.id.empty_text);
+    // This function displays/hides the message displayed when ArrayList measurements is empty.
+    private void emptyMessage() {
+        TextView emptyMessage = findViewById(R.id.empty_message);
 
         if (measurements.size() == 0 || measurements == null) {
-            emptyText.setVisibility(View.VISIBLE);
+            emptyMessage.setVisibility(View.VISIBLE);
         } else {
-            emptyText.setVisibility(View.INVISIBLE);
+            emptyMessage.setVisibility(View.INVISIBLE);
         }
     }
 
-    private void addButton() {
-        FloatingActionButton addMeasurementButton = findViewById(R.id.add_measurement_button);
-        addMeasurementButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                assert true;
-            }
-        });
+    // This function initializes the RecyclerView which lists the measurements in the database.
+    private void initRecyclerView() {
+        RecyclerView recyclerView = findViewById(R.id.recycler_view);
+
+        RecyclerAdapter recyclerAdapter = new RecyclerAdapter(this, measurements);
+        recyclerView.setAdapter(recyclerAdapter);
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 }
