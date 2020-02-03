@@ -13,8 +13,8 @@ public class Measurement {
     private Integer diastolicPressure;
     private Integer heartRate;
     private String comment;
+    private UUID uniqueID;      // unique ID to track each measurement record
 
-    public Measurement() { }
 
     public Measurement(String dateMeasured, String timeMeasured, Integer systolicPressure, Integer diastolicPressure, Integer heartRate, String comment) {
         this.dateMeasured = dateMeasured;
@@ -23,6 +23,7 @@ public class Measurement {
         this.diastolicPressure = diastolicPressure;
         this.heartRate = heartRate;
         this.comment = comment;
+        this.uniqueID = UUID.randomUUID();      // generate unique ID
     }
 
     public String getDateMeasured() { return dateMeasured; }
@@ -36,6 +37,8 @@ public class Measurement {
     public Integer getHeartRate() { return heartRate; }
 
     public String getComment() { return comment; }
+
+    public UUID getUniqueID() { return uniqueID; }
 
     public void setDateMeasured(String dateMeasured) { this.dateMeasured = dateMeasured; }
 

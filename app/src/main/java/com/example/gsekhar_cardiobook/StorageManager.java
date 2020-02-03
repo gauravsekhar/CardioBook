@@ -1,85 +1,110 @@
 package com.example.gsekhar_cardiobook;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-import android.icu.util.Measure;
+import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
-import static com.example.gsekhar_cardiobook.FeedReaderContract.FeedEntry.*;
+// This class is used to store all of the data needed for the app.
+// All data is stored in a text file as a json string using the Gson class.
+public class StorageManager {
+    private Context context;
+    private File file;
+    private Gson gson;
 
-public class StorageManager extends SQLiteOpenHelper {
+    // class constructor
+    public StorageManager(Context context, String fileName) {
+        this.context = context;
+        this.file = new File(context.getFilesDir(), fileName);
+        this.gson = new Gson();
 
-    private static final String TAG = "Storage Manager";
-
-    // If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 1;
-    public static final String DATABASE_NAME = "FeedReader.db";
-
-    public StorageManager(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-    @Override
-    public void onCreate(SQLiteDatabase db) {
-        String createTable = "CREATE TABLE " + TABLE_NAME + " (" + FeedReaderContract.FeedEntry._ID
-                + " INTEGER PRIMARY KEY, " + COLUMN_NAME_DATE + " DATE, " + COLUMN_NAME_TIME
-                + " TIME, " + COLUMN_NAME_SYS_PRESSURE + " INTEGER, " + COLUMN_NAME_DIA_PRESSURE
-                + " INTEGER, " + COLUMN_NAME_HEART_RATE + " INTEGER, " + COLUMN_NAME_COMMENT
-                + " VARCHAR(20))";
-        db.execSQL(createTable);
+    public void addMeasurement(Measurement measurement){
+        ArrayList<Measurement> measurements = getMeasurements();
+        measurements.add(measurement);
+        writeToFile(measurements);
     }
 
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
-        onCreate(db);
+    public void updateMeasurement(Measurement measurement){
+        ArrayList<Measurement> measurements = getMeasurements();
+        for (int i=0; i<measurements.size(); i++){
+            Measurement m = measurements.get(i);
+            if (m.getUniqueID().equals(measurement.getUniqueID())){
+                measurements.set(i, measurement);
+            }
+        }
+        writeToFile(measurements);
     }
 
-    public Boolean addMeasurement(Measurement measurement) {
-        // Gets the data repository in write mode
-        SQLiteDatabase db = this.getWritableDatabase();
+    public void deleteMeasurement(Measurement measurement){
+        ArrayList<Measurement> measurements = getMeasurements();
 
-        // Create a new map of values, where column names are the keys
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_NAME_DATE, measurement.getDateMeasured());
-        values.put(COLUMN_NAME_TIME, measurement.getTimeMeasured());
-        values.put(COLUMN_NAME_SYS_PRESSURE, measurement.getSystolicPressure());
-        values.put(COLUMN_NAME_DIA_PRESSURE, measurement.getDiastolicPressure());
-        values.put(COLUMN_NAME_HEART_RATE, measurement.getHeartRate());
-        values.put(COLUMN_NAME_COMMENT, measurement.getComment());
-
-        long result = db.insert(TABLE_NAME, null, values);
-
-        return (result == -1) ? Boolean.FALSE : Boolean.TRUE;
-    }
-
-    public ArrayList<Measurement> getMeasurements() {
-        ArrayList<Measurement> measurements = new ArrayList<Measurement>();
-
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_NAME, null);
-
-        // if the table is not empty, i.e. if a record exists in the first row
-        if (cursor.moveToFirst()) {
-            // get individual measurements and insert into list
-            do {
-                Measurement measurement = new Measurement();
-                measurement.setDateMeasured(cursor.getString(0));
-                measurement.setTimeMeasured(cursor.getString(1));
-                measurement.setSystolicPressure(Integer.parseInt(cursor.getString(2)));
-                measurement.setDiastolicPressure(Integer.parseInt(cursor.getString(3)));
-                measurement.setHeartRate(Integer.parseInt(cursor.getString(4)));
-                measurement.setComment(cursor.getString(5));
-
-                measurements.add(measurement);
-            } while (cursor.moveToNext());
+        int removalID = -1;
+        for (int i=0; i<measurements.size(); i++){
+            Measurement m = measurements.get(i);
+            if (m.getUniqueID().equals(measurement.getUniqueID())){
+                removalID = i;
+                break;
+            }
         }
 
-        return measurements;
+        if (removalID < 0){
+            Log.d(context.getString(R.string.testGeneralLog), "Unable to delete");
+        }
+
+        measurements.remove(removalID);
+        writeToFile(measurements);
+    }
+
+
+    private void writeToFile(ArrayList<Measurement> measurements){
+        String data = gson.toJson(measurements);
+
+        try {
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
+            fileOutputStream.write(data.getBytes());
+            fileOutputStream.close();
+        }
+        catch (IOException e) {
+            Log.e(context.getString(R.string.testGeneralLog), e.toString());
+        }
+    }
+
+    public ArrayList<Measurement> getMeasurements(){
+        int fileLength = (int) file.length();
+
+        byte[] byteArray = new byte[fileLength];
+
+        try {
+            FileInputStream fileInputStream = new FileInputStream(file);
+            fileInputStream.read(byteArray);
+            fileInputStream.close();
+        }
+        catch (FileNotFoundException e) {
+            Log.e(context.getString(R.string.testGeneralLog), e.toString());
+        }
+        catch (IOException e) {
+            Log.e(context.getString(R.string.testGeneralLog), e.toString());
+        }
+
+        String data = new String(byteArray);
+        Type arrayListMeasurementType = new TypeToken<ArrayList<Measurement>>(){}.getType();
+
+        ArrayList<Measurement> measurements = gson.fromJson(data, arrayListMeasurementType);
+
+        if (measurements == null) {
+            return new ArrayList<Measurement>();
+        } else { return measurements; }
     }
 
 }

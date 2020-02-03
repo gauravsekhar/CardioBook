@@ -22,7 +22,6 @@
         android:layout_marginBottom="10dp"
         android:backgroundTint="@color/buttonBackgroundTint"
         android:tint="@color/buttonTint"
-        android:hapticFeedbackEnabled="true"
         android:clickable="true"
         android:focusable="true"
         android:layout_gravity="bottom|end"
