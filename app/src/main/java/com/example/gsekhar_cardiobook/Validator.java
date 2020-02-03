@@ -4,7 +4,9 @@ import android.content.Context;
 
 import java.util.regex.Pattern;
 
-// This class determines if the data input is valid.
+/*  This class determines if the data input is valid. Each parameter is validated in a separate
+    function and a cumulative function determines if all inputs are valid or not. A message is
+    also returned to output if the measurement was stored successfully. */
 public class Validator {
 
     private Context context;
@@ -40,7 +42,7 @@ public class Validator {
         Boolean valid = Pattern.compile("[0-9]{4}-[0-9]{2}-[0-9]{2}").matcher(date).matches();
 
         if (message == null && !valid) {
-            message = "Invalid Date";
+            message = "Please enter valid date";
         }
 
         return valid;
@@ -51,7 +53,7 @@ public class Validator {
         Boolean valid = Pattern.compile("[0-9]{2}:[0-9]{2}").matcher(time).matches();
 
         if (message == null && !valid) {
-            message = "Invalid Time";
+            message = "Please enter valid time";
         }
 
         return valid;
@@ -62,7 +64,7 @@ public class Validator {
         Boolean valid = Pattern.compile("[0-9]+").matcher(systolicPressure).matches();
 
         if (message == null && !valid) {
-            message = "Invalid Systolic Pressure";
+            message = "Please enter valid systolic pressure";
         }
 
         return valid;
@@ -73,7 +75,7 @@ public class Validator {
         Boolean valid = Pattern.compile("[0-9]+").matcher(diastolicPressure).matches();
 
         if (message == null && !valid) {
-            message = "Invalid Diastolic Pressure";
+            message = "Please enter valid diastolic pressure";
         }
 
         return valid;

@@ -29,17 +29,30 @@ public class StorageManager {
 
     }
 
+    // called from AddEditMeasurement if user adds valid measurement record
     public void addMeasurement(Measurement measurement){
         ArrayList<Measurement> measurements = getMeasurements();
         measurements.add(measurement);
         writeToFile(measurements);
     }
 
-    // called from AddEditMeasurement when user presses delete button
+    // called from AddEditMeasurement if user updates measurement record
+    public void updateMeasurement(Measurement measurement){
+        ArrayList<Measurement> measurements = getMeasurements();
+        for (int i=0; i<measurements.size(); i++){
+            Measurement m = measurements.get(i);
+            if (m.getUniqueID().equals(measurement.getUniqueID())){
+                measurements.set(i, measurement);
+            }
+        }
+        writeToFile(measurements);
+    }
+
+    // called from AddEditMeasurement if user requests deletion by pressing delete button
     public void deleteMeasurement(Measurement measurement){
         ArrayList<Measurement> measurements = getMeasurements();
 
-        int removalID = -1;     // default value
+        int removalID = -1;
         for (int i=0; i<measurements.size(); i++){
             Measurement m = measurements.get(i);
             if (m.getUniqueID().equals(measurement.getUniqueID())){

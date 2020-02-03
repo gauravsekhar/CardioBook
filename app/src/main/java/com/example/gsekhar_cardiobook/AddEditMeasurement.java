@@ -88,6 +88,8 @@ public class AddEditMeasurement extends AppCompatActivity {
                     editingMeasurement.setDiastolicPressure(Integer.valueOf(diastolicInput));
                     editingMeasurement.setHeartRate(Integer.valueOf(heartRateInput));
                     editingMeasurement.setComment(commentInput);
+
+                    storageManager.updateMeasurement(editingMeasurement);
                     break;
             }
         }
