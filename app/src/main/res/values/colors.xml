@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">#323232</color>
     <color name="colorPrimaryDark">#000000</color>
-    <color name="colorAccent">#FFE4BD</color>
+    <color name="colorAccent">#FF6600</color>
     <color name="buttonBackgroundTint">#FF6600</color>
     <color name="buttonTint">#FFFFFF</color>
     <color name="highlight">#FF2800</color>

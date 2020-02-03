@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -54,6 +55,7 @@ public class AddEditMeasurement extends AppCompatActivity {
         startActivity(new Intent(this, MainActivity.class));
     }
 
+    // this function is called if confirm button is pressed
     private void confirmButtonClick() {
         String dateInput = ((EditText) findViewById(R.id.form_date)).getText().toString();
         String timeInput = ((EditText) findViewById(R.id.form_time)).getText().toString();
@@ -62,22 +64,37 @@ public class AddEditMeasurement extends AppCompatActivity {
         String heartRateInput = ((EditText) findViewById(R.id.form_heart_rate)).getText().toString();
         String commentInput = ((EditText) findViewById(R.id.form_comment)).getText().toString();
 
-        switch(mode) {
-            case AddEditMeasurement.ADD:
-                Measurement measurement = new Measurement(dateInput, timeInput, Integer.valueOf(systolicInput), Integer.valueOf(diastolicInput), Integer.valueOf(heartRateInput), commentInput);
-                storageManager.addMeasurement(measurement);
-                break;
-            case AddEditMeasurement.EDIT:
-                editingMeasurement.setDateMeasured(dateInput);
-                editingMeasurement.setTimeMeasured(timeInput);
-                editingMeasurement.setSystolicPressure(Integer.valueOf(systolicInput));
-                editingMeasurement.setDiastolicPressure(Integer.valueOf(diastolicInput));
-                editingMeasurement.setHeartRate(Integer.valueOf(heartRateInput));
-                editingMeasurement.setComment(commentInput);
+        // pass inputs to validator
+        Validator validator = new Validator(this, dateInput, timeInput, systolicInput,
+                diastolicInput, heartRateInput, commentInput, mode);
+
+        // check if inputs are valid
+        Boolean valid = validator.validate();
+
+        // display message received from validator
+        Toast.makeText(this, validator.getMessage(), Toast.LENGTH_SHORT).show();
+
+        // if valid, apply changes
+        if (valid) {
+            switch(mode) {
+                case AddEditMeasurement.ADD:
+                    Measurement measurement = new Measurement(dateInput, timeInput, Integer.valueOf(systolicInput), Integer.valueOf(diastolicInput), Integer.valueOf(heartRateInput), commentInput);
+                    storageManager.addMeasurement(measurement);
+                    break;
+                case AddEditMeasurement.EDIT:
+                    editingMeasurement.setDateMeasured(dateInput);
+                    editingMeasurement.setTimeMeasured(timeInput);
+                    editingMeasurement.setSystolicPressure(Integer.valueOf(systolicInput));
+                    editingMeasurement.setDiastolicPressure(Integer.valueOf(diastolicInput));
+                    editingMeasurement.setHeartRate(Integer.valueOf(heartRateInput));
+                    editingMeasurement.setComment(commentInput);
+                    break;
+            }
         }
         returnToMainActivity();
     }
 
+    // this function is called if delete button is pressed
     private void deleteButtonClick() {
         switch(mode) {
             case AddEditMeasurement.ADD:
