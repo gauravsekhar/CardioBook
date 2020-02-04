@@ -15,14 +15,15 @@ import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
-
-// This class is responsible for implementing the list of measurements in the main activity.
+/*  This class is responsible for implementing a view of the list of measurements. It links
+    the RecyclerView to the .xml files which defines the view layout. It is also responsible for
+    highlighting unusual blood pressures. */
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
 
     private Context context;
     private ArrayList<Measurement> measurements;
 
-    // Constructor
+    // class constructor
     public RecyclerAdapter (Context context, ArrayList<Measurement> measurements){
         this.context = context;
         this.measurements = measurements;
@@ -92,9 +93,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         });
     }
 
+    // return the number of measurements in the view
     @Override
-    public int getItemCount() {
-        return measurements.size();
-    }
+    public int getItemCount() { return measurements.size(); }
 
 }

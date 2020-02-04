@@ -15,6 +15,9 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
+/*  This class implements the logic on the main activity page of the application, including
+    prompting the user to add a measurement using the button, initializing the RecyclerView and
+    transitioning to the AddEditMeasurement activity. */
 public class MainActivity extends AppCompatActivity {
 
     private ArrayList<Measurement> measurements = new ArrayList<>();
@@ -32,8 +35,7 @@ public class MainActivity extends AppCompatActivity {
         // initialize the measurements list
         initRecyclerView();
 
-        FloatingActionButton addMeasurementButton = (FloatingActionButton) findViewById(R.id.add_measurement_button);
-
+        FloatingActionButton addMeasurementButton = findViewById(R.id.add_measurement_button);
         addMeasurementButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -63,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
+    // This function is called to transition to AddEditMeasurement activity.
     public static void addEditMeasurement(Context context, int mode, Measurement measurement) {
         Intent intent = new Intent(context, AddEditMeasurement.class);
         intent.putExtra(AddEditMeasurement.MODELABEL, mode);

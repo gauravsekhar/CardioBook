@@ -1,10 +1,10 @@
 package com.example.gsekhar_cardiobook;
 
-import android.icu.util.Measure;
-
 import java.util.UUID;
 
-// This class contains field variables which are recorded for each measurement.
+/*  This class contains field variables which are recorded for each measurement, including a
+    unique ID which is useful when attempting to update or delete a measurement. Getters and
+    setters are included for each of these field variables. */
 public class Measurement {
 
     private String dateMeasured;
@@ -15,7 +15,7 @@ public class Measurement {
     private String comment;
     private UUID uniqueID;      // unique ID to track each measurement record
 
-
+    // class constructor
     public Measurement(String dateMeasured, String timeMeasured, Integer systolicPressure, Integer diastolicPressure, Integer heartRate, String comment) {
         this.dateMeasured = dateMeasured;
         this.timeMeasured = timeMeasured;

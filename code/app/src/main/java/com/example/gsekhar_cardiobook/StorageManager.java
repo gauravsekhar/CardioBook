@@ -14,8 +14,9 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
-// This class is used to store all of the data needed for the app.
-// All data is stored in a text file as a json string using the Gson class.
+/*  This class is used to store and manipulate data inserted by the user. Data is stored
+    in a (.txt) file as a JSON string using the GSON class. It contains functions for adding
+    new measurements, updating existing measurements and removing measurements. */
 public class StorageManager {
     private Context context;
     private File file;
@@ -26,7 +27,6 @@ public class StorageManager {
         this.context = context;
         this.file = new File(context.getFilesDir(), fileName);
         this.gson = new Gson();
-
     }
 
     // called from AddEditMeasurement if user adds valid measurement record
@@ -69,7 +69,7 @@ public class StorageManager {
         writeToFile(measurements);
     }
 
-
+    // called by internal functions to write measurements to file
     private void writeToFile(ArrayList<Measurement> measurements){
         String data = gson.toJson(measurements);
 
@@ -83,6 +83,7 @@ public class StorageManager {
         }
     }
 
+    // called to read file for all existing measurements and return them
     public ArrayList<Measurement> getMeasurements(){
         int fileLength = (int) file.length();
 

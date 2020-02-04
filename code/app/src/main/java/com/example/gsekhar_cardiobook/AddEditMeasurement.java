@@ -12,7 +12,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 
-// This class handles the adding, editing, and removing measurements.
+/*  This class implements the logic on the add/edit measurement activity page, including checking
+    the mode (ADD or EDIT), calling the validator if the confirm button is clicked to add/update
+    a measurement, and removing a measurement if the delete button is clicked. */
 public class AddEditMeasurement extends AppCompatActivity {
 
     private StorageManager storageManager;
@@ -108,6 +110,7 @@ public class AddEditMeasurement extends AppCompatActivity {
         returnToMainActivity();
     }
 
+    // this function is called by checkMode() if mode == ADD
     private void initAddMode() {
         // action to be performed when confirm button is pressed
         FloatingActionButton submit = findViewById(R.id.fab_confirm);
@@ -128,7 +131,8 @@ public class AddEditMeasurement extends AppCompatActivity {
         });
 
     }
-    
+
+    // this function is called by checkMode() if mode == EDIT
     private void initEditMode(String data) {
 
         Gson gson = new Gson();
